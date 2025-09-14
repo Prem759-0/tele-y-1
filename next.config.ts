@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       }
     ]
   },
+  // Configure for Replit proxy environment
+  experimental: {
+    allowedOrigins: true,
+  },
   // Configure for production deployment compatibility
   eslint: {
     ignoreDuringBuilds: false,

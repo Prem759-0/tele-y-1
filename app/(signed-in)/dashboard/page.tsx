@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { LogOutIcon, VideoIcon } from "lucide-react";
 import { useRouter } from "next/navigation"; 
+import { useUser } from "@clerk/nextjs";
 import {
   Channel,
   Window,
@@ -15,8 +16,8 @@ import {
 } from "stream-chat-react";
 
 function Dashboard() {
-  // ⚡️ Removed unused `user` to fix ESLint warning
   const router = useRouter();
+  const { user } = useUser();
   const { channel, setActiveChannel } = useChatContext();
   const { setOpen } = useSidebar();
 
@@ -27,14 +28,14 @@ function Dashboard() {
   };
 
   const handleLeaveChat = async () => {
-    if (!channel) return;
+    if (!channel || !user?.id) return;
 
     const confirmLeave = window.confirm("Are you sure you want to leave the chat?");
     if (!confirmLeave) return;
 
     try {
-      // In real app, also remove current userId from channel
-      await channel.removeMembers([]);
+      // Remove current user from channel
+      await channel.removeMembers([user.id]);
 
       setActiveChannel(undefined);
 
@@ -56,19 +57,25 @@ function Dashboard() {
                 <ChannelHeader />
               )}
 
-              <div className="flex items-center gap-2">
-                <Button variant="outline" onClick={handleCall}>
-                  <VideoIcon className="w-4 h-4" />
-                  Video Call
+              <div className="flex items-center gap-1 sm:gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={handleCall}
+                  className="text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2 h-8 sm:h-10"
+                >
+                  <VideoIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline ml-1 sm:ml-2">Video Call</span>
+                  <span className="inline sm:hidden">Call</span>
                 </Button>
 
                 <Button
                   variant="outline"
                   onClick={handleLeaveChat}
-                  className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
+                  className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950 text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2 h-8 sm:h-10"
                 >
-                  <LogOutIcon className="w-4 h-4" />
-                  Leave Chat
+                  <LogOutIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline ml-1 sm:ml-2">Leave Chat</span>
+                  <span className="inline sm:hidden">Leave</span>
                 </Button>
               </div>
             </div>
