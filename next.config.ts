@@ -9,7 +9,14 @@ const nextConfig: NextConfig = {
         hostname: 'img.clerk.com'
       }
     ]
-  }
+  },
+  // Configure for production deployment compatibility
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
 };
 
 export default nextConfig;

@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
-import { useUser } from "@clerk/nextjs";
 import { LogOutIcon, VideoIcon } from "lucide-react";
 import { useRouter } from "next/navigation"; 
 import {
